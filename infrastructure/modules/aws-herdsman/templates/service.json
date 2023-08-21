@@ -1,0 +1,52 @@
+[
+  {
+    "name": "herdsman",
+    "image": "${repository_url}",
+    "cpu": 10,
+    "memory": 200,
+    "portMappings": [
+      {
+        "containerPort": ${control_port},
+        "hostPort": ${host_port}
+      }
+    ],
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-region": "${logs_region}",
+        "awslogs-stream-prefix": "ecs",
+        "awslogs-group": "${cloudwatch_group}"
+      }
+    },
+
+    "environment": [
+      {
+        "name": "WORKER_TYPE",
+        "value": "LAMBDA"
+      },
+      {
+        "name": "LAMBDA_WORKER_HOSTNAME",
+        "value": "${worker_hostname}"
+      },
+      {
+        "name": "LAMBDA_WORKER_PORT",
+        "value": "${worker_port}"
+      },
+      {
+        "name": "LAMBDA_CONCURRENCY_LIMIT",
+        "value": "1"
+      }
+    ],
+
+    "mountPoints": [
+      {
+        "containerPath": "/storage/key",
+        "sourceVolume": "key"
+      },
+      {
+        "containerPath": "/storage/data_frame",
+        "sourceVolume": "data_frame"
+      }
+    ]
+  }
+]

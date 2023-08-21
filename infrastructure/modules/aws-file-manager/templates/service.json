@@ -1,0 +1,56 @@
+[
+  {
+    "name": "ifm",
+    "image": "opsforge/ifm",
+    "cpu": 10,
+    "memory": 200,
+    "portMappings": [
+      {
+        "containerPort": ${control_port},
+        "hostPort": ${host_port}
+      }
+    ],
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-region": "${logs_region}",
+        "awslogs-stream-prefix": "ecs",
+        "awslogs-group": "${cloudwatch_group}"
+      }
+    },
+
+    "environment": [
+      {
+        "name": "IFM_ROOT_DIR",
+        "value": "/storage"
+      },
+      {
+        "name": "IFM_DOCKER_UID",
+        "value": "1000"
+      },
+      {
+        "name": "IFM_DOCKER_GID",
+        "value": "1000"
+      },
+      {
+        "name": "IFM_AUTH",
+        "value": "1"
+      },
+      {
+        "name": "IFM_AUTH_SOURCE",
+        "value": "inline;${admin_username}:${admin_password_hash}"
+      }
+    ],
+
+    "mountPoints": [
+      {
+        "containerPath": "/storage/key",
+        "sourceVolume": "key"
+      },
+      {
+        "containerPath": "/storage/data_frame",
+        "sourceVolume": "data_frame"
+      }
+    ]
+  }
+]
