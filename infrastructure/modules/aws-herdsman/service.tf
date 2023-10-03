@@ -3,7 +3,13 @@ locals {
 }
 
 resource "aws_cloudwatch_log_group" "herd_herdsman" {
-  name = "herd-herdsman-logs"
+  count = var.create_cloud_watch_group ? 1 : 0
+  name = var.cloud_watch_group
+}
+
+
+locals {
+  cloud_watch_group_name = var.create_cloud_watch_group ? aws_cloudwatch_log_group.herd_herdsman[0].name : var.cloud_watch_group
 }
 
 data "template_file" "herd_herdsman_task_definition" {
@@ -15,7 +21,7 @@ data "template_file" "herd_herdsman_task_definition" {
     host_port = var.port
 
     logs_region = var.aws_default_region
-    cloudwatch_group = aws_cloudwatch_log_group.herd_herdsman.name
+    cloudwatch_group = local.cloud_watch_group_name
 
     worker_hostname = var.worker_hostname
     worker_port = var.worker_port

@@ -3,7 +3,12 @@ locals {
 }
 
 resource "aws_cloudwatch_log_group" "herd_file_manager" {
-  name = "herd-file-manager-logs"
+  count = var.create_cloud_watch_group ? 1 : 0
+  name = var.cloud_watch_group
+}
+
+locals {
+  cloud_watch_group_name = var.create_cloud_watch_group ? aws_cloudwatch_log_group.herd_file_manager[0].name : var.cloud_watch_group
 }
 
 data "template_file" "herd_file_manager_task_definition" {
@@ -13,7 +18,7 @@ data "template_file" "herd_file_manager_task_definition" {
     host_port = var.port
 
     logs_region = var.aws_default_region
-    cloudwatch_group = aws_cloudwatch_log_group.herd_file_manager.name
+    cloudwatch_group = local.cloud_watch_group_name
 
     admin_username = var.admin_username
     admin_password_hash = var.admin_password_hash

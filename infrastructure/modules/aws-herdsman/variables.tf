@@ -42,3 +42,13 @@ variable "key_storage_ap_id" {
 variable "data_frame_storage_ap_id" {
   type = string
 }
+
+variable "cloud_watch_group" {
+  type = string
+  default = "herd-herdsman-logs"
+}
+
+variable "create_cloud_watch_group" {
+  type = bool
+  default = true
+}

@@ -17,15 +17,9 @@ resource "tls_private_key" "ed25519-example" {
 }
 
 resource "aws_key_pair" "generated_key" {
-  # Name of key: Write the custom name of your key
   key_name   = "aws_keys_pairs"
 
-  # Public Key: The public will be generated using the reference of tls_private_key.terrafrom_generated_private_key
   public_key = tls_private_key.ed25519-example.public_key_openssh
-
-
-
-  # Store private key :  Generate and save private key(aws_keys_pairs.pem) in current directory
 
   provisioner "local-exec" {
     command = <<-EOT
@@ -38,13 +32,16 @@ resource "aws_key_pair" "generated_key" {
 resource "aws_launch_configuration" "herdsman-launch-configuration" {
   image_id      = local.ami_id
   instance_type = "t2.micro"
-  iam_instance_profile = aws_iam_instance_profile.herd_ecs_instance.arn
+  iam_instance_profile = local.iam_instance_profile
   security_groups = [aws_security_group.herd_ecs_instance.id]
 
   associate_public_ip_address = true
   key_name = aws_key_pair.generated_key.key_name
 
   user_data = data.cloudinit_config.herd_ecs_instance_config.rendered
+}
+
+data "aws_default_tags" "current" {
 }
 
 resource "aws_autoscaling_group" "herdsman_autoscaling" {
@@ -55,4 +52,13 @@ resource "aws_autoscaling_group" "herdsman_autoscaling" {
   desired_capacity = 1
   min_size = 1
   max_size = 1
+
+  dynamic "tag" {
+    for_each = data.aws_default_tags.current.tags
+    content {
+      key = tag.key
+      value = tag.value
+      propagate_at_launch = true
+    }
+  }
 }

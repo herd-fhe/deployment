@@ -13,6 +13,12 @@ variable "allowed_sgs" {
 
 variable "worker_role" {
   type = string
+  default = ""
+}
+
+variable "worker_instance_profile" {
+  type = string
+  default = ""
 }
 
 variable "common_storage_ap_arn" {
@@ -35,7 +41,7 @@ variable "worker_release_base_url" {
 
 variable "worker_log_level" {
   type = string
-  default = "info"
+  default = "trace"
 }
 
 variable "port" {

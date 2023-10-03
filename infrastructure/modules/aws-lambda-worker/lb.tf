@@ -6,6 +6,8 @@ resource "aws_alb" "herd_worker" {
   security_groups = [
     aws_security_group.herd_worker_load_balancer.id
   ]
+
+  idle_timeout = 4000
 }
 
 resource "aws_lambda_permission" "herd_worker_lambda_lb" {

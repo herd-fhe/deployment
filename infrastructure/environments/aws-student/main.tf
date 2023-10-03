@@ -13,7 +13,7 @@ module "cluster" {
     var.herdsman_port
   ]
 
-  ecs_instance_profile = "fhe_EC2ContainerServiceforEC2Role"
+  ecs_instance_role = "LabRole"
 }
 
 module "storage" {
@@ -47,8 +47,6 @@ module "file_manager" {
 
   admin_username = var.admin_username
   admin_password_hash = var.admin_password_hash
-
-  create_cloud_watch_group = false
 }
 
 module "worker" {
@@ -60,7 +58,7 @@ module "worker" {
 
   common_storage_ap_arn = module.storage.common_ap.arn
 
-  worker_role = "fhe_AWSLambdaBasicExecutionRole"
+  worker_role = "LabRole"
   worker_version = var.worker_version
 
   worker_log_level = "debug"
@@ -81,6 +79,4 @@ module "herdsman" {
   data_frame_storage_ap_id = module.storage.data_frame_storage_ap.id
 
   worker_hostname = module.worker.lambda_alb_dns_name
-
-  create_cloud_watch_group = false
 }

@@ -41,3 +41,13 @@ variable "admin_username" {
 variable "admin_password_hash" {
   type = string
 }
+
+variable "cloud_watch_group" {
+  type = string
+  default = "herd-file-manager-logs"
+}
+
+variable "create_cloud_watch_group" {
+  type = bool
+  default = true
+}

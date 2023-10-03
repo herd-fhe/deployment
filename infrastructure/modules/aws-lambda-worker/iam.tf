@@ -22,10 +22,6 @@ locals {
   iam_role_name = var.worker_role == "" ? aws_iam_role.herd_worker[0].name : var.worker_role
 }
 
-resource "aws_iam_instance_profile" "herd_worker" {
-  name = "herd-worker"
-  role = local.iam_role_name
-}
 
 resource "aws_iam_role_policy_attachment" "herd_ecs_instance" {
   count = var.worker_role == "" ? 1 : 0

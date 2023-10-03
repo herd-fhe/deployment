@@ -4,10 +4,6 @@ locals {
   data_frame_map_point = "${local.common_map_point}/data_frame"
 }
 
-resource "aws_cloudwatch_log_group" "herd_worker" {
-  name = "herd-worker"
-}
-
 resource "aws_lambda_function" "herd_worker" {
   function_name = "worker"
   role          = local.iam_role_arn
@@ -17,6 +13,8 @@ resource "aws_lambda_function" "herd_worker" {
   runtime = "provided"
 
   timeout = 900
+
+  memory_size = 2048
 
   vpc_config {
     subnet_ids         = var.private_subnet_ids
@@ -29,7 +27,7 @@ resource "aws_lambda_function" "herd_worker" {
     variables = {
       KEY_BASE_DIR = local.key_map_point
       STORAGE_BASE_DIR = local.data_frame_map_point
-      LOG_LEVEL = var.worker_log_level
+      SPDLOG_LEVEL = var.worker_log_level
       INVOKER = "API_CALL"
     }
   }

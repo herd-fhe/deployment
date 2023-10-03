@@ -3,8 +3,8 @@
 let
     herdsman_source = pkgs.fetchgit {
         url = "https://github.com/herd-fhe/herdsman.git";
-        rev = "v0.0.5";
-        sha256 = "57dd367146bc505dde9dd8aff6dfc63c76c5881ba09e6d5c86b76f28f260aa6a";
+        rev = "v0.0.11";
+        sha256 = "52f5bb88b51204c73745246917f66f4dfc4266287874866d74b80507634c0fb3";
     };
 
     herdsman = import herdsman_source { inherit pkgs; };

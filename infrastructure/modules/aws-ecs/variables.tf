@@ -17,6 +17,11 @@ variable "ecs_instance_role" {
   default     = ""
 }
 
+variable "ecs_instance_profile" {
+  type = string
+  default = ""
+}
+
 variable "inbound_ports" {
   type = list(number)
 }
